@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shaka Player Integration</title>
+
+  <!-- Link to Shaka Player CSS (if any) -->
+  <link rel="stylesheet" href="shaka-player/shaka-player.min.css">
+
+  <!-- Your custom styles if any -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div id="video-container">
+    <video id="video" width="640" controls></video>
+  </div>
+
+  <!-- Link to Shaka Player JS -->
+  <script src="shaka-player/shaka-player.min.js"></script>
+
+  <script>
+    // Initialize the Shaka Player after the page loads
+    window.onload = function() {
+      var video = document.getElementById('video');
+      var player = new shaka.Player(video);
+
+      // Listen for errors
+      player.addEventListener('error', function(event) {
+        console.error('Error code', event.detail.code, 'object', event.detail);
+      });
+
+      // Load a video
+      player.load('your_video_url.mp4').then(function() {
+        console.log('Video loaded successfully');
+      }).catch(function(error) {
+        console.error('Error loading video', error);
+      });
+    };
+  </script>
+</body>
+</html>
