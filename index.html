@@ -20,23 +20,34 @@
   <script src="shaka-player.min.js"></script>
 
   <script>
-    // Initialize the Shaka Player after the page loads
-    window.onload = function() {
-      var video = document.getElementById('video');
-      var player = new shaka.Player(video);
+    // Get the video element
+    var video = document.getElementById('video');
+    
+    // Check if the browser supports HLS
+    if (Hls.isSupported()) {
+      // Create a new HLS.js player
+      var hls = new Hls();
 
-      // Listen for errors
-      player.addEventListener('error', function(event) {
-        console.error('Error code', event.detail.code, 'object', event.detail);
+      // Specify the M3U8 URL (replace with your actual M3U8 link)
+      var m3u8Link = 'https://path_to_your_stream.m3u8';
+
+      // Attach the HLS stream to the video element
+      hls.loadSource(m3u8Link);
+      hls.attachMedia(video);
+
+      // Handle HLS.js events
+      hls.on(Hls.Events.MANIFEST_PARSED, function() {
+        console.log('Manifest loaded');
+      });
+      
+      hls.on(Hls.Events.ERROR, function(event, data) {
+        console.error('Error:', data);
       });
 
-      // Load a video
-      player.load('your_video_url.mp4').then(function() {
-        console.log('Video loaded successfully');
-      }).catch(function(error) {
-        console.error('Error loading video', error);
-      });
-    };
+    } else {
+      console.error('HLS is not supported in your browser.');
+    }
   </script>
+
 </body>
 </html>
