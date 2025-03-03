@@ -1,373 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta content="no-referrer" name="referrer">
-    <meta content="width=device-width, initial-scale=1" name="viewport">
-    <meta content="frame-ancestors 'none';" http-equiv="Content-Security-Policy">
-    <meta content="no-store, no-cache, must-revalidate" http-equiv="Cache-Control">
-    <link href="fav.png" rel="shortcut icon">
-    <meta content="no-cache" http-equiv="Pragma">
-    <meta content="0" http-equiv="Expires">
-    <title>Cric Stream Live - Player</title>
-    <link rel="stylesheet" href="./shakamod.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./app.css">
-    <script src="https://nightly-dot-shaka-player-demo.appspot.com/dist/shaka-player.ui.js"></script>
-    <script src="./app.js"></script>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tg- @cric_stream</title>
+    <link rel="stylesheet" href="./player.css">
     <style>
-        /* Global Styles */
-        * {
+        body {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #262626;
+            font-family: Arial, sans-serif;
+            background-color: #000;
             color: #fff;
-            line-height: 1.6;
-            margin-top: 140px;
-            transition: background-color 0.3s ease;
         }
-
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(135deg, #FC0, #F60);
-            color: #fff;
-            padding: 8px 20px;
-            box-shadow: 0 4px 10px #0000004d;
-            z-index: 100;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            margin: 0 auto;
-            max-width: 1200px;
-            width: 100%;
-            border-radius: 0 0 15px 15px;
-        }
-
-        header h1 {
-            font-size: 32px;
-            font-weight: 700;
-            color: #000;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        header .clock {
-            font-size: 20px;
-            font-weight: 600;
-        }
-
-        header .join-telegram {
-            background-color: #08c;
-            color: #fff;
-            padding: 8px 16px;
-            border-radius: 5px;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            border: none;
-            transition: background-color 0.3s ease;
-        }
-
-        header .join-telegram:hover {
-            background-color: #005f73;
-        }
-
-        header .join-telegram img {
-            margin-right: 8px;
-            width: 25px;
-            height: 25px;
-        }
-
-        /* Mobile View Styling */
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 28px;
-                text-align: center;
-            }
-
-            header .clock {
-                font-size: 18px;
-            }
-
-            header .join-telegram {
-                font-size: 14px;
-                padding: 6px 12px;
-            }
-
-            header {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            /* Input container */
-            .config-container {
-                max-width: 90%;
-                padding: 15px;
-            }
-
-            .config-container input,
-            .url-input {
-                width: 100%;
-                padding: 12px;
-                font-size: 16px;
-            }
-
-            .config-container button {
-                font-size: 14px;
-                padding: 8px 16px;
-            }
-
-            .copy-btn {
-                font-size: 14px;
-                padding: 8px 14px;
-            }
-
-            .loading-spinner {
-                width: 40px;
-                height: 40px;
-            }
-        }
-
-        /* Desktop View Styling */
-@media (min-width: 769px) {
-    header {
-        flex-direction: row;
-        justify-content: space-between;  /* This will push the items to both ends */
-        text-align: left;
-    }
-
-    .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-    }
-
-    .clock {
-        margin-right: 20px; /* Add margin to the right to space out the clock */
-    }
-
-    .join-telegram {
-        margin-left: auto; /* Push the join button to the far right */
-    }
-
-    /* Ensure the button stays aligned right */
-    header h1 {
-        margin-right: auto; /* Ensure the title stays on the left */
-    }
-
-    /* Reduce the gap between the header and the URL input */
-    body {
-        margin-top: 80px;  /* Adjusted margin-top to reduce the space */
-    }
-
-    .config-container {
-        max-width: 500px;
-        padding: 20px;
-        margin-top: 10px; /* Reduced margin-top for the config container */
-    }
-
-    .config-container input,
-    .url-input {
-        width: 80%;
-        padding: 10px;
-    }
-
-    .config-container button {
-        font-size: 16px;
-        padding: 10px 20px;
-    }
-
-    .copy-btn {
-        font-size: 16px;
-        padding: 10px 20px;
-    }
-
-    .loading-spinner {
-        width: 50px;
-        height: 50px;
-    }
-}
-
-
-
-        /* Input Styling */
-        .config-container {
-            padding: 20px;
-            background-color: #333;
-            color: #fff;
-            border-radius: 10px;
-            margin: 20px auto;
-            max-width: 500px;
-            width: 100%;
-            text-align: center;
-        }
-
-        .config-container input {
-            width: 80%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #555;
-            border-radius: 5px;
-            color: #fff;
-            background-color: #222;
-        }
-
-        .config-container button {
-            background-color: #08c;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: background-color 0.3s ease;
-        }
-
-        .config-container button:hover {
-            background-color: #005f73;
-        }
-
-        /* Enhanced Loading and Error Handling */
-        #unsupported {
-            color: #e11616;
-            font-size: 48px;
-            text-align: center;
-            margin-top: 50px;
-        }
-
-        /* Player and Button Layout */
-        #buttons-container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        #inputs-container {
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        .input-container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 10px;
-        }
-
-        .url-input {
-            flex: 1;
-            margin-right: 10px;
-            padding: 5px 12px;
-            font-size: 14px;
-            border: 1px solid #e1e4e8;
-            border-radius: 6px;
-            background-color: #fff;
-        }
-
-        .url-input:focus {
-            outline: none;
-            box-shadow: rgb(10, 204, 238) 0px 0px 0px 3px;
-        }
-
-        #add,
-        #load {
-            padding: 10px 20px;
-            background-color: #08c;
-            color: #fff;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-right: 10px;
-        }
-
-        #load:hover {
-            background-color: #005f73;
-        }
-
-        /* Loading Spinner */
-        .loading-spinner {
+        #player {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid #fff;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* Copy Button Styling */
-        .copy-btn {
-            background-color: #cc6600;
-            font-weight: bold;
-            color: #fff;
-            padding: 5px 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        /* Add flash animation on hover */
-        .copy-btn:hover {
-            background-color: #005f73;
-            animation: flash 0.5s ease-out infinite;
-        }
-
-        /* Keyframes for flash effect */
-        @keyframes flash {
-            0% {
-                background-color: #cc6600;
-            }
-
-            50% {
-                background-color: #ff6666;  /* Flash to a bright color */
-            }
-
-            100% {
-                background-color: #cc6600;
-            }
+            width: 100% !important;
+            height: 100% !important;
         }
     </style>
 </head>
-
 <body>
-    <header>
-        <div class="header">
-            <h1>Cric Stream Live</h1>
-            <div class="clock" id="clock"></div>
-            <button class="join-telegram" onclick="window.open('https://t.me/cric_stream', '_blank')">
-                <img src="https://i.ibb.co/M2NXXcv/telegram-white-icon.png" alt="Telegram Logo" /> Join Telegram Channel
-            </button>
-        </div>
-    </header>
+<div id="player"></div>
 
-    
-        
+<script src="https://content.jwplatform.com/libraries/KB5zFt7A.js"></script>
+<script>
+// Function to setup JWPlayer
+function setupPlayer(videoUrl, widevineLicenseUrl) {
+    const playerInstance = jwplayer("player").setup({
+        controls: true,
+        sharing: true,
+        displaytitle: true,
+        autoplay: true,
+        displaydescription: true,
+        abouttext: "Video Player By cric_stream",
+        aboutlink: "https://t.me/cric_stream",
+
+        skin: {
+            name: "cric_stream"
+        },
+
+
+        captions: {
+            color: "#FFF",
+            fontSize: 14,
+            backgroundOpacity: 0,
+            edgeStyle: "raised"
+        },
+
+        playlist: [
+            {
+                title: "Live Sports",
+                description: "You're Watching",
+                sources: [
+                    {
+                        file: videoUrl,
+                        type: "hls",
+                        label: "1080p",
+                        default: true
+                    }
+                ]
+            }
+        ],
+        advertising: {
+            client: "vast",
+            schedule: [
+                {
+                    offset: "pre",
+                    tag: ""
+                }
+            ]
+        }
+    });
+
+    playerInstance.on("ready", function () {
+        const playerContainer = playerInstance.getContainer();
+        const buttonContainer = playerContainer.querySelector(".jw-button-container");
+        const spacer = buttonContainer.querySelector(".jw-spacer");
+        const timeSlider = playerContainer.querySelector(".jw-slider-time");
+        buttonContainer.replaceChild(timeSlider, spacer);
+
+        playerInstance.on("adBlock", () => {
+            const modal = document.querySelector("div.modal");
+            modal.style.display = "flex";
+
+            document.getElementById("close").addEventListener("click", () => location.reload());
+        });
+
+        const rewindContainer = playerContainer.querySelector(".jw-display-icon-rewind");
+        const forwardContainer = rewindContainer.cloneNode(true);
+        const forwardDisplayButton = forwardContainer.querySelector(".jw-icon-rewind");
+        forwardDisplayButton.style.transform = "scaleX(-1)";
+        forwardDisplayButton.ariaLabel = "Forward 10 Seconds";
+        const nextContainer = playerContainer.querySelector(".jw-display-icon-next");
+        nextContainer.parentNode.insertBefore(forwardContainer, nextContainer);
+
+        playerContainer.querySelector(".jw-display-icon-next").style.display = "none";
+        const rewindControlBarButton = buttonContainer.querySelector(".jw-icon-rewind");
+        const forwardControlBarButton = rewindControlBarButton.cloneNode(true);
+        forwardControlBarButton.style.transform = "scaleX(-1)";
+        forwardControlBarButton.ariaLabel = "Forward 10 Seconds";
+        rewindControlBarButton.parentNode.insertBefore(forwardControlBarButton, rewindControlBarButton.nextElementSibling);
+
+        [forwardDisplayButton, forwardControlBarButton].forEach((button) => {
+            button.onclick = () => {
+                playerInstance.seek(playerInstance.getPosition() + 10);
+            };
+        });
+    });
+}
+
+// Check if the video URL is a .php link and resolve it if necessary
+function resolveAndSetupPlayer(videoUrl) {
+    if (videoUrl.includes('.php')) {
+        fetch('resolve_redirect.php?url=' + encodeURIComponent(videoUrl))
+            .then(response => response.json())
+            .then(data => {
+                if (data.finalUrl) {
+                    setupPlayer(data.finalUrl, null);
+                } else {
+                    alert("Failed to resolve the PHP link. Please provide a valid MPD or HLS link.");
+                }
+            })
+            .catch(error => {
+                console.error('Error resolving URL:', error);
+                alert("Failed to resolve the PHP link. Please provide a valid MPD or HLS link.");
+            });
+    } else {
+        setupPlayer(videoUrl, null);
+    }
+}
+
+// Resolve and setup player
+resolveAndSetupPlayer("https://jcevents.jiocinema.com/bpk-tv/JC_ColorsTamilHD/JCHLS/hdntl=exp=1740995206~acl=%2f*~id=f4cfcf38fa8064bfdedee505bef23471~data=hdntl~hmac=f3bd15721751e51d2311d7b5eb75bb3da5344ef8d1c11fe643b1a7e2c0c185ae/index.m3u8");
+</script>
 </body>
-
 </html>
