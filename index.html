@@ -1,103 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Plyr HLS Player with URL Params</title>
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            margin: 0;
-            background-color: #000;
-        }
-        video {
-            width: 100%;
-            height: auto;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>JW Player Streaming</title>
+  <script src="https://cdn.jwplayer.com/libraries/IDzF9Zmk.js"></script>
+  <style>
+    #jwplayerDiv {
+      width: 100%;
+      max-width: 800px;
+      height: 450px;
+      margin: auto;
+    }
+  </style>
 </head>
 <body>
-    <div style="width: 100%; max-width: 100%;">
-        <video id="player" controls crossorigin playsinline></video>
-    </div>
 
-    <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+<div id="jwplayerDiv"></div>
 
-    <script>
-        // Get URL parameter ?file=
-        function getStreamUrl() {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('file');
-        }
+<script>
+  jwplayer("jwplayerDiv").setup({
+    file: "https://jdou5wo6ffta.acek-cdn.com/hls2/01/06223/e85ww2zrhvvj_h/master.m3u8?t=hEJ4NRmAlCJcHulyAXs0mgW2ANiBzPmY9hwrJeboi0A&s=1756762667&e=129600&f=31115563&srv=pmjx9cjae94d&i=0.4&sp=500&p1=pmjx9cjae94d&p2=pmjx9cjae94d&asn=55836",
+    width: "100%",
+    aspectratio: "16:9",
+    autostart: false,
+    mute: false,
+    preload: "auto",
+  });
+</script>
 
-        document.addEventListener("DOMContentLoaded", () => {
-            const streamUrl = getStreamUrl();
-
-            if (!streamUrl || !streamUrl.endsWith('.m3u8')) {
-                document.body.innerHTML = "<h2 style='color:white;text-align:center;margin-top:20px;'>❌ Invalid or missing stream URL</h2>";
-                return;
-            }
-
-            const video = document.querySelector("#player");
-            const defaultOptions = {};
-
-            if (Hls.isSupported()) {
-                const hls = new Hls();
-                hls.loadSource(streamUrl);
-                hls.attachMedia(video);
-
-                hls.on(Hls.Events.MANIFEST_PARSED, function(event, data) {
-                    const availableQualities = hls.levels.map(l => l.height).filter((v, i, a) => a.indexOf(v) === i);
-
-                    defaultOptions.controls = [
-                        'play-large',
-                        'play',
-                        'progress',
-                        'duration',
-                        'mute',
-                        'settings',
-                        'pip',
-                        'airplay',
-                        'fullscreen',
-                    ];
-
-                    defaultOptions.quality = {
-                        default: availableQualities[availableQualities.length - 1],
-                        options: availableQualities,
-                        forced: true,
-                        onChange: (quality) => {
-                            if (quality === 0) {
-                                hls.currentLevel = -1; // Auto
-                            } else {
-                                const levelIndex = hls.levels.findIndex(level => level.height === quality);
-                                if (levelIndex !== -1) hls.currentLevel = levelIndex;
-                            }
-                        }
-                    };
-
-                    defaultOptions.i18n = {
-                        quality: 'Quality',
-                        settings: 'Settings',
-                        play: 'Play',
-                        pause: 'Pause',
-                        mute: 'Mute',
-                        unmute: 'Unmute',
-                        fullscreen: 'Fullscreen',
-                        exitFullscreen: 'Exit Fullscreen'
-                    };
-
-                    const player = new Plyr(video, defaultOptions);
-                });
-
-                window.hls = hls;
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                // For Safari
-                video.src = streamUrl;
-                const player = new Plyr(video);
-            } else {
-                document.body.innerHTML = "<h2 style='color:white;text-align:center;margin-top:20px;'>❌ HLS is not supported in this browser.</h2>";
-            }
-        });
-    </script>
 </body>
 </html>
