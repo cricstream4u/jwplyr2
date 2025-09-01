@@ -1,177 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HLS Video Player</title>
-    <style>
-        /* Style for the video player container */
-        .video-container {
-            position: relative;
-            background-color: #7e879d;
-            border: 2px solid #3586FF;
-            border-radius: 3px;
-            width: 100%;
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center; /* Center elements below the video */
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HLS Video Player</title>
+  <style>
+    .video-container {
+      position: relative;
+      background-color: #7e879d;
+      border: 2px solid #3586FF;
+      border-radius: 3px;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
 
-        /* Ensure play button is centered inside the video */
-        .play-button {
-            position: absolute;
-            top: 40%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(0, 0, 0, 0.7);
-            border: none;
-            color: white;
-            border-radius: 50%;
-            width: 70px;
-            height: 70px;
-            font-size: 30px;
-            text-align: center;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0.8;
-            transition: opacity 0.3s;
-            z-index: 2; /* Ensure the button appears above the video */
-        }
-
-        .play-button:hover {
-            opacity: 1;
-        }
-
-        .play-button.hidden {
-            display: none;
-        }
-@media (max-width: 600px) {
     .play-button {
-        width: 12vw; /* Slightly larger on smaller screens */
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(0, 0, 0, 0.7);
+      border: none;
+      color: white;
+      border-radius: 50%;
+      width: 70px;
+      height: 70px;
+      font-size: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      opacity: 0.8;
+      transition: opacity 0.3s;
+      z-index: 2;
+    }
+
+    .play-button:hover {
+      opacity: 1;
+    }
+
+    .play-button.hidden {
+      display: none;
+    }
+
+    @media (max-width: 600px) {
+      .play-button {
+        width: 12vw;
         height: 12vw;
         font-size: 3vw;
         display: none;
+      }
     }
-} 
-        /* Video element styling */
-        video {
-            width: 100%;
-            height: auto;
-            border: 2px solid #87CEEB;
-            position: relative;
-            z-index: 1; /* Ensure it's behind the play button */
-        }
 
-        /* Dropdown controls below the video */
-        .controls {
-            margin-top: 5px;
-            margin-bottom: 5px; /* Add space between video and selectors */
-            display: flex;
-            justify-content: center;
-            gap: 10px; /* Add spacing between the dropdowns */
-        }
+    video {
+      width: 100%;
+      height: auto;
+      border: 2px solid #87CEEB;
+      position: relative;
+      z-index: 1;
+    }
 
-        select {
-            padding: 5px;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            border: none;
-            border-radius: 5px;
-        }
-    </style>
+    .controls {
+      margin-top: 5px;
+      margin-bottom: 5px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    select {
+      padding: 5px;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+  </style>
 </head>
 <body>
-    <div class="video-container">
-        <video id="video" controls poster="https://laving.cc/g6aujo3y6s7d_xt.jpg?v=133676&quot"></video>
-        <button class="play-button" id="play-button">▶</button>
-        <div class="controls">
-            <select id="quality-select"></select>
-            <select id="language-select"></select>
-        </div>
+  <div class="video-container">
+    <video id="video" controls poster="https://laving.cc/g6aujo3y6s7d_xt.jpg?v=133676&quot"></video>
+    <button class="play-button" id="play-button">▶</button>
+    <div class="controls">
+      <select id="quality-select"></select>
+      <select id="language-select"></select>
     </div>
+  </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <script>
-        const video = document.getElementById('video');
-        const qualitySelect = document.getElementById('quality-select');
-        const languageSelect = document.getElementById('language-select');
-        const playButton = document.getElementById('play-button');
-        const hls = new Hls();
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script>
+    const video = document.getElementById('video');
+    const qualitySelect = document.getElementById('quality-select');
+    const languageSelect = document.getElementById('language-select');
+    const playButton = document.getElementById('play-button');
+    const hls = new Hls();
 
-        const m3u8Url = 'https://jdou5wo6ffta.acek-cdn.com/hls2/01/06223/e85ww2zrhvvj_h/master.m3u8?t=hEJ4NRmAlCJcHulyAXs0mgW2ANiBzPmY9hwrJeboi0A&s=1756762667&e=129600&f=31115563&srv=pmjx9cjae94d&i=0.4&sp=500&p1=pmjx9cjae94d&p2=pmjx9cjae94d&asn=55836';
+    // ✅ Get `file` param from URL
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
 
-        if (Hls.isSupported()) {
-            hls.loadSource(m3u8Url);
-            hls.attachMedia(video);
+    const m3u8Url = getQueryParam("file");
 
-            // Event listener for quality selection
-            hls.on(Hls.Events.MANIFEST_LOADED, function(event, data) {
-                const qualities = data.levels;
-                qualities.forEach((level, index) => {
-                    const option = document.createElement('option');
-                    option.value = index;
-                    option.textContent = `Quality ${index + 1} - ${level.height}p`;
-                    qualitySelect.appendChild(option);
-                });
+    if (!m3u8Url || !m3u8Url.startsWith("http")) {
+      alert("❌ Invalid or missing 'file' URL parameter.");
+    } else if (Hls.isSupported()) {
+      hls.loadSource(m3u8Url);
+      hls.attachMedia(video);
 
-                // Auto select best quality
-                qualitySelect.value = qualities.length - 1;
+      hls.on(Hls.Events.MANIFEST_LOADED, function (event, data) {
+        const qualities = data.levels;
+        qualitySelect.innerHTML = "";
+        qualities.forEach((level, index) => {
+          const option = document.createElement('option');
+          option.value = index;
+          option.textContent = `Quality ${index + 1} - ${level.height}p`;
+          qualitySelect.appendChild(option);
+        });
+        qualitySelect.value = qualities.length - 1;
+        qualitySelect.addEventListener('change', (e) => {
+          hls.startLevel = e.target.value;
+        });
+      });
 
-                // Update quality on change
-                qualitySelect.addEventListener('change', (e) => {
-                    const selectedQuality = e.target.value;
-                    hls.startLevel = selectedQuality;
-                });
-            });
-
-            // Event listener for language selection
-            hls.on(Hls.Events.MANIFEST_PARSED, function(event, data) {
-                const tracks = data.audioTracks;
-                tracks.forEach((track, index) => {
-                    const option = document.createElement('option');
-                    option.value = index;
-                    option.textContent = track.name;
-                    languageSelect.appendChild(option);
-                });
-
-                // Auto select default language
-                if (tracks.length > 0) {
-                    languageSelect.value = 0;
-                    hls.audioTrack = 0; // Set the initial audio track
-                }
-
-                // Update audio track on change
-                languageSelect.addEventListener('change', (e) => {
-                    const selectedTrack = e.target.value;
-                    hls.audioTrack = selectedTrack;
-                });
-            });
-        } else {
-            console.error('HLS is not supported in this browser.');
-            alert('Your browser does not support HLS natively. Please use a supported browser or use a plugin.');
-        }
-
-        // Toggle play and pause on button click
-        playButton.addEventListener('click', togglePlay);
-        video.addEventListener('play', () => {
-            playButton.classList.add('hidden');
+      hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+        const tracks = data.audioTracks;
+        languageSelect.innerHTML = "";
+        tracks.forEach((track, index) => {
+          const option = document.createElement('option');
+          option.value = index;
+          option.textContent = track.name || `Track ${index + 1}`;
+          languageSelect.appendChild(option);
         });
 
-        video.addEventListener('pause', () => {
-            playButton.classList.remove('hidden');
-        });
-
-        function togglePlay() {
-            if (video.paused) {
-                video.play();
-            } else {
-                video.pause();
-            }
+        if (tracks.length > 0) {
+          languageSelect.value = 0;
+          hls.audioTrack = 0;
         }
-    </script>
+
+        languageSelect.addEventListener('change', (e) => {
+          hls.audioTrack = e.target.value;
+        });
+      });
+
+    } else {
+      console.error('HLS is not supported in this browser.');
+      alert('❌ Your browser does not support HLS. Try Chrome or use an HLS-compatible player.');
+    }
+
+    // Toggle play and pause on button click
+    playButton.addEventListener('click', togglePlay);
+    video.addEventListener('play', () => playButton.classList.add('hidden'));
+    video.addEventListener('pause', () => playButton.classList.remove('hidden'));
+
+    function togglePlay() {
+      if (video.paused) {
+        video.play();
+      } else {
+        video.pause();
+      }
+    }
+  </script>
 </body>
 </html>
-
-
